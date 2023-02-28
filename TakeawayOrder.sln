@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TakeawayOrder", "TakeawayOrder\TakeawayOrder.csproj", "{B623C506-7747-46F5-BBE2-11165207AB8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B623C506-7747-46F5-BBE2-11165207AB8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B623C506-7747-46F5-BBE2-11165207AB8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B623C506-7747-46F5-BBE2-11165207AB8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B623C506-7747-46F5-BBE2-11165207AB8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {234FC296-FEE4-428B-A658-BC11D4DAC492}
+	EndGlobalSection
+EndGlobal
