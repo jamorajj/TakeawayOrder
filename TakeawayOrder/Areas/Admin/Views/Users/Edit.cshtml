@@ -1,24 +1,15 @@
-﻿@model LoginViewModel
+﻿@model UserViewModel
 
 @{
-    ViewData["Title"] = "Staff Login";
+    ViewData["Title"] = "Edit Staff Information";
 }
-
-<div class="col-12 m-2">
-    @if (TempData["val"] != null)
-    {
-        <div class="bg-info text-white p-2">
-            @TempData["val"]
-        </div>
-    }
-</div>
 
 <div class="card" style="width: 20rem; margin: 0 auto;">
     <div class="card-body pb-0">
-        <h5 class="card-title text-center">Staff Login</h5>
+        <h5 class="card-title text-center">Create Takeaway App User</h5>
     </div>
     <div class="card-body pt-0">
-        <form asp-action="Login">
+        <form asp-area="Admin" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
@@ -26,13 +17,27 @@
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group mt-2">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
                 <label asp-for="Password" class="control-label"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <div class="form-group d-grid mt-4">
-                <input type="submit" value="Login" class="btn btn-primary" />
+
+            <input type="hidden" value="@Model.Id" name="Id" />
+
+            <div class="form-group d-grid mt-2">
+                <input type="submit" value="Edit" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary mt-2">
+                    Back to List
+                </a>
             </div>
+
         </form>
     </div>
 </div>
+
+

@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace TakeawayOrder.Models
 {
-    public class User
+    public class UserViewModel
     {
         public string Id { get; set; }
         [Required, MinLength(2, ErrorMessage = "Min length is 2")]
@@ -13,5 +14,15 @@ namespace TakeawayOrder.Models
         public string Email { get; set; }
         [DataType(DataType.Password), Required, MinLength(4, ErrorMessage = "Min length is 4")]
         public string Password { get; set; }
+
+        public UserViewModel() { }
+
+        public UserViewModel(IdentityUser user)
+        {
+            Id = user.Id;
+            UserName = user.UserName;
+            Email = user.Email;
+            Password = user.PasswordHash;
+        }
     }
 }

@@ -35,5 +35,12 @@ namespace TakeawayOrder.Controllers
 
             return View(loginVM);
         }
+
+        public async Task<RedirectResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+
+            return Redirect("/");
+        }
     }
 }
