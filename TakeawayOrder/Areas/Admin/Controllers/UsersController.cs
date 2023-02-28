@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TakeawayOrder.Models;
 
 namespace TakeawayOrder.Areas.Admin.Controllers
@@ -20,17 +21,19 @@ namespace TakeawayOrder.Areas.Admin.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
+            // check if there are users, if none, redirect to initialize
             int numUsers = _userManager.Users.ToList().Count();
 
-            // check if there are users, if none, redirect to create
             if (numUsers == 0)
             {
-                return Redirect("/Admin/Users/Create");
+                return Redirect("/Admin/Users/Initialize");
             }
 
+            // if app has users, list all users and roles for admin to see
             List<UserWithRoleViewModel> usersWithRoles = new List<UserWithRoleViewModel>();
             var users = _userManager.Users.ToList();
 
+            // users view model to get roles per user
             foreach (var user in users)
             {
                 UserWithRoleViewModel userWithRole = new UserWithRoleViewModel();
@@ -48,7 +51,7 @@ namespace TakeawayOrder.Areas.Admin.Controllers
         }
 
         // will be only used to create the first user
-        public IActionResult Create()
+        public IActionResult Initialize()
         {
             int numUsers = _userManager.Users.ToList().Count();
 
@@ -58,12 +61,13 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                 TempData["val"] = "Not allowed";
 
                 return Redirect("/Account/Login");
-            }
+            } 
+
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(User user)
+        public async Task<IActionResult> Initialize(User user)
         {
             int numUsers = _userManager.Users.ToList().Count();
 
@@ -74,7 +78,10 @@ namespace TakeawayOrder.Areas.Admin.Controllers
 
                 if (numUsers == 0)
                 {
+                    // initialize other roles
                     result = await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                    result = await _roleManager.CreateAsync(new IdentityRole("Cashier"));
+                    result = await _roleManager.CreateAsync(new IdentityRole("Kitchen"));
                     result = await _userManager.AddToRoleAsync(newUser, "Admin");
                 }
 
@@ -93,17 +100,47 @@ namespace TakeawayOrder.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(UserCreateViewModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityUser newUser = new IdentityUser { UserName = user.UserName, Email = user.Email };
+                IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
+
+                result = await _userManager.AddToRoleAsync(newUser, user.StaffRole.ToString());
+
+                if (result.Succeeded)
+                {
+                    return Redirect("/Admin");
+                }
+
+                foreach (IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View(user);
+        }
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id)
         {
             IdentityUser user = await _userManager.FindByIdAsync(id);
 
-            UserViewModel userEdit = new(user);
+            UserEditViewModel userEdit = new(user);
 
             return View(userEdit);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserViewModel user)
+        public async Task<IActionResult> Edit(UserEditViewModel user)
         {
             if (ModelState.IsValid)
             {
