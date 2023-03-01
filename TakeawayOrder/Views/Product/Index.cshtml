@@ -1,0 +1,71 @@
+﻿@model List<Product>
+
+<h1>List of Products</h1>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteProductModalLabel">Delete Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+            </div>
+            <div id="modalFooter" class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <tr class="bg-secondary text-center text-white">
+        <th>Name</th>
+        <th>Price</th>
+        <th></th>
+        <th></th>
+    </tr>
+
+
+    @if (Model.Count == 0)
+    {
+        <tr>
+            <td colspan="4" class="text-center">No Products for this app</td>
+        </tr>
+    }
+    else
+    {
+        foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td class="text-center">
+                    <a class="btn btn-sm btn-secondary" asp-action="Edit" asp-area="" asp-route-id="@product.Id">Edit</a>
+                </td>
+                <td class="text-center">
+                    <button data-pid="@product.Id" data-pname="@product.Name" type="button" class="deleteProductBtn btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    }
+</table>
+
+<script type="text/javascript">
+    const deleteProductBtns = document.querySelectorAll(".deleteProductBtn");
+    const modalBody = document.getElementById("modalBody");
+    const modalFooter = document.getElementById("modalFooter");
+    const deleteBtn = document.createElement("a");
+    deleteBtn.classList = "btn btn-danger";
+    deleteBtn.innerHTML = "Delete";
+
+    modalFooter.appendChild(deleteBtn);
+
+    deleteProductBtns.forEach(el => el.addEventListener('click', e => {
+        deleteBtn.href = `/Product/Delete/${e.target.getAttribute("data-pid")}`;
+        modalBody.innerHTML = `Delete product ${e.target.getAttribute("data-pname")}?`
+    }));
+</script>

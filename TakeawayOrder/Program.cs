@@ -6,6 +6,11 @@ using TakeawayOrder.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnection"]);
+});
+
 builder.Services.AddDbContext<IdentityContext>(options =>
 {
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnection"]);
@@ -45,6 +50,10 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// Data Seed
+var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
+SeedData.SeedDatabase(context);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
