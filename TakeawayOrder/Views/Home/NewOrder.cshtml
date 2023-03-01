@@ -1,0 +1,62 @@
+﻿@model List<ProductOnOrderViewModel>
+@{
+    ViewData["Title"] = "New Order Page";
+}
+
+<form asp-area="" asp-action="NewOrder">
+    <div class="d-flex justify-content-between">
+        <div>
+            <h2>Products Available</h2>
+        </div>
+        <div class="d-flex align-items-center">
+            <input type="submit" value="Place Order" class="btn btn-primary btn-sm me-2" />
+            <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Home" asp-action="Index">Cancel</a>
+        </div>
+    </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <table class="table table-bordered">
+
+        <tr class="bg-secondary text-center text-white">
+            <th>Name</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+
+
+        @if (Model.Count == 0)
+        {
+            <tr>
+                <td colspan="3" class="text-center">No Products for this app</td>
+            </tr>
+        }
+        else
+        {
+            @for (var index = 0; index < @Model.Count(); index++)
+            {
+                <tr>
+                    <td>@Model[index].ProductName</td>
+                    <td>@Model[index].ProductPrice</td>
+                    <td class="text-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="@Model[index].IsChecked" id="flexCheckDefault">
+                            <input type="hidden" asp-for="@Model[index].ProductId" />
+                            <input type="hidden" asp-for="@Model[index].ProductName" />
+                            <input type="hidden" asp-for="@Model[index].ProductPrice" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+    <div class="d-flex justify-content-between">
+        <div>
+            <h2></h2>
+        </div>
+        <div class="d-flex align-items-center">
+            <input type="submit" value="Place Order" class="btn btn-primary btn-sm me-2" />
+            <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Home" asp-action="Index">Cancel</a>
+        </div>
+    </div>
+</form>
+
+
