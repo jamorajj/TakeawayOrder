@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using TakeawayOrder.Models;
 
 namespace TakeawayOrder.Controllers
@@ -25,6 +26,7 @@ namespace TakeawayOrder.Controllers
             if (ModelState.IsValid)
             {
                 Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(loginVM.UserName, loginVM.Password, false, false);
+
                 if (result.Succeeded)
                 {
                     return Redirect("/");

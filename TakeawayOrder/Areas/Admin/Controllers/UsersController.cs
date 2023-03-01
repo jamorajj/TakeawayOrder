@@ -106,14 +106,14 @@ namespace TakeawayOrder.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserCreateViewModel user)
+        public async Task<IActionResult> Create(UserCreateViewModel userCreateVM)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser newUser = new IdentityUser { UserName = user.UserName, Email = user.Email };
-                IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
+                IdentityUser newUser = new IdentityUser { UserName = userCreateVM.UserName, Email = userCreateVM.Email };
+                IdentityResult result = await _userManager.CreateAsync(newUser, userCreateVM.Password);
 
-                result = await _userManager.AddToRoleAsync(newUser, user.StaffRole.ToString());
+                result = await _userManager.AddToRoleAsync(newUser, userCreateVM.StaffRole.ToString());
 
                 if (result.Succeeded)
                 {
@@ -126,7 +126,7 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                 }
             }
 
-            return View(user);
+            return View(userCreateVM);
         }
 
         [Authorize(Roles = "Admin")]
@@ -140,20 +140,25 @@ namespace TakeawayOrder.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserEditViewModel user)
+        public async Task<IActionResult> Edit(UserEditViewModel userEditVM)
         {
+            string roleToRemove = userEditVM.StaffRole.ToString() == "Kitchen" ? "Cashier" : "Kitchen";
+
             if (ModelState.IsValid)
             {
-                IdentityUser identityUser = await _userManager.FindByIdAsync(user.Id);
-                identityUser.UserName = user.UserName;
-                identityUser.Email = user.Email;
+                IdentityUser userToEdit = await _userManager.FindByIdAsync(userEditVM.Id);
+                userToEdit.UserName = userEditVM.UserName;
+                userToEdit.Email = userEditVM.Email;
 
-                IdentityResult result = await _userManager.UpdateAsync(identityUser);
+                IdentityResult result = await _userManager.UpdateAsync(userToEdit);
 
-                if (result.Succeeded && !String.IsNullOrEmpty(user.Password))
+                result = await _userManager.RemoveFromRoleAsync(userToEdit, roleToRemove);
+                result = await _userManager.AddToRoleAsync(userToEdit, userEditVM.StaffRole.ToString());
+
+                if (result.Succeeded && !String.IsNullOrEmpty(userEditVM.Password))
                 {
-                    await _userManager.RemovePasswordAsync(identityUser);
-                    result = await _userManager.AddPasswordAsync(identityUser, user.Password);
+                    await _userManager.RemovePasswordAsync(userToEdit);
+                    result = await _userManager.AddPasswordAsync(userToEdit, userEditVM.Password);
                 }
 
                 if (result.Succeeded)
@@ -167,7 +172,7 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                 }
             }
 
-            return View(user);
+            return View(userEditVM);
         }
     }
 }
