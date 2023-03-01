@@ -174,5 +174,18 @@ namespace TakeawayOrder.Areas.Admin.Controllers
 
             return View(userEditVM);
         }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            IdentityUser user = await _userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                await _userManager.DeleteAsync(user);
+            }
+
+            return RedirectToAction("Index");
+
+        }
     }
 }

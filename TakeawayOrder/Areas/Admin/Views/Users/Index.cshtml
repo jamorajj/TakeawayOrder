@@ -2,6 +2,23 @@
 
 <h1>List of Users</h1>
 
+<!-- Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteUserModalLabel">Delete User</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+            </div>
+            <div id="modalFooter" class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table class="table table-bordered">
     <tr class="bg-secondary text-center text-white">
         <th>Username</th>
@@ -21,16 +38,39 @@
     else
     {
         foreach (var user in Model)
-        {   
+        {
             <tr>
                 <td>@user.Username</td>
                 <td>@user.Email</td>
                 <td>@user.Role</td>
-                <td class="text-center"><a class="btn btn-sm btn-secondary" asp-action="Edit" asp-area="Admin" asp-route-id="@user.UserId">Edit</a></td>
                 <td class="text-center">
-                    <a class="btn btn-sm btn-secondary" asp-action="Delete" asp-area="Admin" asp-route-id="@user.UserId">Delete</a>
+                    <a class="btn btn-sm btn-secondary" asp-action="Edit" asp-area="Admin" asp-route-id="@user.UserId">Edit</a>
+                </td>
+                <td class="text-center">
+                    @if (user.Role != "Admin")
+                    {
+                        <button data-uid="@user.UserId" data-username="@user.Username" type="button" class="deleteUserBtn btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
+                            Delete
+                        </button>
+                    }
                 </td>
             </tr>
         }
     }
 </table>
+
+<script type="text/javascript">
+    const deleteUserBtns = document.querySelectorAll(".deleteUserBtn");
+    const modalBody = document.getElementById("modalBody");
+    const modalFooter = document.getElementById("modalFooter");
+    const deleteBtn = document.createElement("a");
+    deleteBtn.classList = "btn btn-danger";
+    deleteBtn.innerHTML = "Delete";
+
+    modalFooter.appendChild(deleteBtn);
+
+    deleteUserBtns.forEach(el => el.addEventListener('click', e => {
+        deleteBtn.href = `/Admin/Users/Delete/${e.target.getAttribute("data-uid")}`;
+        modalBody.innerHTML = `Delete user ${e.target.getAttribute("data-username")}?`
+    }));
+</script>
