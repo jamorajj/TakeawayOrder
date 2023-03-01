@@ -1,6 +1,13 @@
 ﻿@model List<UserWithRoleViewModel>
 
-<h1>List of Users</h1>
+<div class="d-flex justify-content-between">
+    <div>
+        <h2>List of Users</h2>
+    </div>
+    <div class="d-flex align-items-center">
+        <a class="btn btn-primary btn-sm" asp-area="Admin" asp-controller="Users" asp-action="Create">Add User</a>
+    </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
@@ -27,7 +34,6 @@
         <th></th>
         <th></th>
     </tr>
-
 
     @if (Model.Count == 0)
     {
