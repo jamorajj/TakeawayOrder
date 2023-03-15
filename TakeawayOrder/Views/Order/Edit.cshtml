@@ -1,0 +1,50 @@
+﻿@model OrderViewModel
+
+@{
+    ViewData["Title"] = "Update Order Status";
+}
+
+<div class="card" style="width: 20rem; margin: 0 auto;">
+    <div class="card-body pb-0">
+        <h5 class="card-title text-center">Update Order</h5>
+    </div>
+    <div class="card-body pt-0">
+        <form asp-area="" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                Name: @Model.OrderName
+            </div>
+            <div class="form-group mt-2">
+                <table class="table table-bordered">
+                    <tr class="bg-secondary text-center text-white">
+                        <th>Name</th>
+                        <th>Price</th>
+                    </tr>
+                    @foreach (var product in Model.OrderProducts)
+                    {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Price</td>
+                    </tr>
+                    }
+                </table>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="OrderStatus" class="control-label"></label>
+                @Html.DropDownListFor(m => m.OrderStatus, new SelectList(Enum.GetValues(typeof(OrderStatus))), new { @class="form-control" })
+            </div>
+            <input type="hidden" value="@Model.OrderId" name="OrderId" />
+
+            <div class="form-group d-grid mt-2">
+                <input type="submit" value="Edit" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary mt-2">
+                    Back to List
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+

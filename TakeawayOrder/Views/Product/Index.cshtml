@@ -1,4 +1,7 @@
 ﻿@model List<Product>
+@{
+    ViewData["Title"] = "Manage Products Page";
+}
 
 <div class="d-flex justify-content-between">
     <div>
@@ -60,6 +63,9 @@
         }
     }
 </table>
+<a asp-action="Index" asp-controller="Home" class="mt-2">
+    Back to Orders
+</a>
 
 <script type="text/javascript">
     const deleteProductBtns = document.querySelectorAll(".deleteProductBtn");

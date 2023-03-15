@@ -1,4 +1,7 @@
 ﻿@model List<UserWithRoleViewModel>
+@{
+    ViewData["Title"] = "Manage Users Page";
+}
 
 <div class="d-flex justify-content-between">
     <div>
@@ -64,6 +67,9 @@
         }
     }
 </table>
+<a asp-action="Index" asp-controller="Home" asp-area="" class="mt-2">
+    Back to Orders
+</a>
 
 <script type="text/javascript">
     const deleteUserBtns = document.querySelectorAll(".deleteUserBtn");

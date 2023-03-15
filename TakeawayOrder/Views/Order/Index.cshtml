@@ -1,14 +1,13 @@
 ﻿@model List<Order>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Manage Orders Page";
 }
 
 <div class="d-flex justify-content-between">
     <div>
-        <h2>Orders</h2>
+        <h2>Manage Orders</h2>
     </div>
     <div class="d-flex align-items-center">
-        <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Home" asp-action="NewOrder">New Order</a>
     </div>
 </div>
 
@@ -16,6 +15,7 @@
     <tr class="bg-secondary text-center text-white">
         <th>Order Name</th>
         <th>Status</th>
+        <th></th>
     </tr>
 
 
@@ -29,13 +29,16 @@
     {
         foreach (var order in Model)
         {
-            @if (order.status != OrderStatus.Done)
-            {
-                <tr>
-                    <td>@order.OrderName</td>
-                    <td>@order.status</td>
-                </tr>
-            }
+            <tr>
+                <td>@order.OrderName</td>
+                <td>@order.status</td>
+                <td class="text-center">
+                    <a class="btn btn-sm btn-secondary" asp-action="Edit" asp-area="" asp-route-id="@order.Id">Update</a>
+                </td>
+            </tr>
         }
     }
 </table>
+<a asp-action="Index" asp-controller="Home" class="mt-2">
+    Back to Orders
+</a>

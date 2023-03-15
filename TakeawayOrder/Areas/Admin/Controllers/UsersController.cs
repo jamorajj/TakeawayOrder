@@ -18,7 +18,6 @@ namespace TakeawayOrder.Areas.Admin.Controllers
             _roleManager = roleManager;
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             // check if there are users, if none, redirect to initialize
@@ -27,6 +26,11 @@ namespace TakeawayOrder.Areas.Admin.Controllers
             if (numUsers == 0)
             {
                 return Redirect("/Admin/Users/Initialize");
+            }
+
+            if (!User.IsInRole("Admin"))
+            {
+                return Redirect("/");
             }
 
             // if app has users, list all users and roles for admin to see
@@ -61,7 +65,7 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                 TempData["val"] = "Not allowed";
 
                 return Redirect("/Account/Login");
-            } 
+            }
 
             return View();
         }

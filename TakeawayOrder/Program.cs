@@ -19,6 +19,19 @@ builder.Services.AddDbContext<IdentityContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdmin", policy => policy.RequireRole("Admin"));
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireKitchen", policy => policy.RequireRole("Kitchen"));
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireCashier", policy => policy.RequireRole("Cashier"));
+});
+
 // Add configuration for weak password to make testing easier
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>
@@ -35,7 +48,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
 {
     options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/AccessDenied";
+    options.AccessDeniedPath = "/";
 });
 
 // Add Razor Pages

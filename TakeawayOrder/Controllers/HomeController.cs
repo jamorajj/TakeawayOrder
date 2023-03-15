@@ -19,6 +19,18 @@ namespace TakeawayOrder.Controllers
         {
             return View(_context.Orders.ToList());
         }
+        public IActionResult NewPage()
+        {
+            return View();
+        }
+        public IActionResult About()
+        {
+            return View();
+        }
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
         public IActionResult NewOrder()
         {
             List<ProductOnOrderViewModel> productList = new List<ProductOnOrderViewModel>();

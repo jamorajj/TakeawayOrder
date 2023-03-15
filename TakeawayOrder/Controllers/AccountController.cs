@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using TakeawayOrder.Models;
@@ -29,6 +30,11 @@ namespace TakeawayOrder.Controllers
 
                 if (result.Succeeded)
                 {
+                    IdentityUser user = await _userManager.FindByNameAsync(loginVM.UserName);
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    roles.FirstOrDefault();
+
                     return Redirect("/");
                 }
 
@@ -41,7 +47,6 @@ namespace TakeawayOrder.Controllers
         public async Task<RedirectResult> Logout()
         {
             await _signInManager.SignOutAsync();
-
             return Redirect("/");
         }
     }
