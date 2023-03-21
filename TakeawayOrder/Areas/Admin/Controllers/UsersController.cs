@@ -9,10 +9,10 @@ namespace TakeawayOrder.Areas.Admin.Controllers
     [Area("Admin")]
     public class UsersController : Controller
     {
-        private UserManager<IdentityUser> _userManager;
+        private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
 
-        public UsersController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UsersController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -43,6 +43,7 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                 UserWithRoleViewModel userWithRole = new UserWithRoleViewModel();
 
                 userWithRole.UserId = user.Id;
+                userWithRole.FullName = user.FullName;
                 userWithRole.Username = user.UserName;
                 userWithRole.Email = user.Email;
                 var roles = await _userManager.GetRolesAsync(user);
@@ -77,7 +78,11 @@ namespace TakeawayOrder.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                IdentityUser newUser = new IdentityUser { UserName = user.UserName, Email = user.Email };
+                ApplicationUser newUser = new ApplicationUser { 
+                    UserName = user.UserName,
+                    Email = user.Email, 
+                    FullName = user.UserName,
+                };
                 IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
 
                 if (numUsers == 0)
@@ -86,6 +91,7 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                     result = await _roleManager.CreateAsync(new IdentityRole("Admin"));
                     result = await _roleManager.CreateAsync(new IdentityRole("Cashier"));
                     result = await _roleManager.CreateAsync(new IdentityRole("Kitchen"));
+                    result = await _roleManager.CreateAsync(new IdentityRole("Guest"));
                     result = await _userManager.AddToRoleAsync(newUser, "Admin");
                 }
 
@@ -114,7 +120,11 @@ namespace TakeawayOrder.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser newUser = new IdentityUser { UserName = userCreateVM.UserName, Email = userCreateVM.Email };
+                ApplicationUser newUser = new ApplicationUser {
+                    FullName = userCreateVM.FullName,
+                    UserName = userCreateVM.UserName,
+                    Email = userCreateVM.Email
+                };
                 IdentityResult result = await _userManager.CreateAsync(newUser, userCreateVM.Password);
 
                 result = await _userManager.AddToRoleAsync(newUser, userCreateVM.StaffRole.ToString());
@@ -136,7 +146,7 @@ namespace TakeawayOrder.Areas.Admin.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id)
         {
-            IdentityUser user = await _userManager.FindByIdAsync(id);
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
 
             UserEditViewModel userEdit = new(user);
 
@@ -150,14 +160,18 @@ namespace TakeawayOrder.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                IdentityUser userToEdit = await _userManager.FindByIdAsync(userEditVM.Id);
+                ApplicationUser userToEdit = await _userManager.FindByIdAsync(userEditVM.Id);
                 userToEdit.UserName = userEditVM.UserName;
                 userToEdit.Email = userEditVM.Email;
+                userToEdit.FullName = userEditVM?.FullName;
 
                 IdentityResult result = await _userManager.UpdateAsync(userToEdit);
 
-                result = await _userManager.RemoveFromRoleAsync(userToEdit, roleToRemove);
-                result = await _userManager.AddToRoleAsync(userToEdit, userEditVM.StaffRole.ToString());
+                if (!User.IsInRole("Admin"))
+                {
+                    result = await _userManager.RemoveFromRoleAsync(userToEdit, roleToRemove);
+                    result = await _userManager.AddToRoleAsync(userToEdit, userEditVM.StaffRole.ToString());
+                }
 
                 if (result.Succeeded && !String.IsNullOrEmpty(userEditVM.Password))
                 {
@@ -181,7 +195,7 @@ namespace TakeawayOrder.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(string id)
         {
-            IdentityUser user = await _userManager.FindByIdAsync(id);
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
 
             if (user != null)
             {

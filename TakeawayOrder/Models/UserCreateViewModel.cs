@@ -5,6 +5,9 @@ namespace TakeawayOrder.Models
 {
     public class UserCreateViewModel
     {
+        [Required, MinLength(4, ErrorMessage = "Min length is 4")]
+        [Display(Name = "Name")]
+        public string FullName { get; set; }
         public string Id { get; set; }
         [Required, MinLength(2, ErrorMessage = "Min length is 2")]
         [Display(Name = "Username")]

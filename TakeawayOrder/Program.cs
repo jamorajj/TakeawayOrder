@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TakeawayOrder.Data;
+using TakeawayOrder.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +34,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 // Add configuration for weak password to make testing easier
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequiredLength = 4;
@@ -85,3 +86,12 @@ app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
 app.Run();
+
+// product promotion
+// search products
+// add edit delete customer for manager users?
+// top 10 customers
+// cart system (add edit delete)
+// checkout
+// contact page
+// deploy to app service??

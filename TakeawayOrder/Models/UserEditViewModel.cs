@@ -5,6 +5,9 @@ namespace TakeawayOrder.Models
 {
     public class UserEditViewModel
     {
+        [Required, MinLength(4, ErrorMessage = "Min length is 4")]
+        [Display(Name = "Name")]
+        public string FullName { get; set; }
         public string Id { get; set; }
         [Required, MinLength(2, ErrorMessage = "Min length is 2")]
         [Display(Name = "Username")]
@@ -21,9 +24,10 @@ namespace TakeawayOrder.Models
 
         public UserEditViewModel() { }
 
-        public UserEditViewModel(IdentityUser user)
+        public UserEditViewModel(ApplicationUser user)
         {
             Id = user.Id;
+            FullName = user.FullName;
             UserName = user.UserName;
             Email = user.Email;
             Password = user.PasswordHash;
