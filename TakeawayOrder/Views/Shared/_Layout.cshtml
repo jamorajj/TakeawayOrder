@@ -46,8 +46,11 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Manage Products</a>
                             </li>
                         }
-                        @if ((await AuthorizationService.AuthorizeAsync(User, "RequireKitchen")).Succeeded)
+                        @if ((await AuthorizationService.AuthorizeAsync(User, "RequireStaff")).Succeeded)
                         {
+                            <li class="nav-item">
+                                manage customer users
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Manage Orders</a>
                             </li>
@@ -55,7 +58,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Manage Products</a>
                             </li>
                         }
-                        @if ((await AuthorizationService.AuthorizeAsync(User, "RequireCashier")).Succeeded)
+                        @if ((await AuthorizationService.AuthorizeAsync(User, "RequireCustomer")).Succeeded)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Manage Orders</a>

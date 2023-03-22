@@ -15,12 +15,12 @@ namespace TakeawayOrder.Controllers
         {
             _context = context;
         }
-        [Authorize(Roles = "Kitchen,Admin,Cashier")]
+        [Authorize(Roles = "Staff,Admin")]
         public IActionResult Index()
         {
             return View(_context.Orders.ToList());
         }
-        [Authorize(Roles = "Kitchen,Admin,Cashier")]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> Edit(long id)
         {
             Order order = await _context.Orders.FindAsync(id);

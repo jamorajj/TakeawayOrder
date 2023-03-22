@@ -89,9 +89,8 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                 {
                     // initialize other roles
                     result = await _roleManager.CreateAsync(new IdentityRole("Admin"));
-                    result = await _roleManager.CreateAsync(new IdentityRole("Cashier"));
-                    result = await _roleManager.CreateAsync(new IdentityRole("Kitchen"));
-                    result = await _roleManager.CreateAsync(new IdentityRole("Guest"));
+                    result = await _roleManager.CreateAsync(new IdentityRole("Staff"));
+                    result = await _roleManager.CreateAsync(new IdentityRole("Customer"));
                     result = await _userManager.AddToRoleAsync(newUser, "Admin");
                 }
 
@@ -127,7 +126,8 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                 };
                 IdentityResult result = await _userManager.CreateAsync(newUser, userCreateVM.Password);
 
-                result = await _userManager.AddToRoleAsync(newUser, userCreateVM.StaffRole.ToString());
+                // all users created by admin are staff
+                result = await _userManager.AddToRoleAsync(newUser, "Staff");
 
                 if (result.Succeeded)
                 {
@@ -156,8 +156,6 @@ namespace TakeawayOrder.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel userEditVM)
         {
-            string roleToRemove = userEditVM.StaffRole.ToString() == "Kitchen" ? "Cashier" : "Kitchen";
-
             if (ModelState.IsValid)
             {
                 ApplicationUser userToEdit = await _userManager.FindByIdAsync(userEditVM.Id);
@@ -166,12 +164,6 @@ namespace TakeawayOrder.Areas.Admin.Controllers
                 userToEdit.FullName = userEditVM?.FullName;
 
                 IdentityResult result = await _userManager.UpdateAsync(userToEdit);
-
-                if (!User.IsInRole("Admin"))
-                {
-                    result = await _userManager.RemoveFromRoleAsync(userToEdit, roleToRemove);
-                    result = await _userManager.AddToRoleAsync(userToEdit, userEditVM.StaffRole.ToString());
-                }
 
                 if (result.Succeeded && !String.IsNullOrEmpty(userEditVM.Password))
                 {

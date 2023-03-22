@@ -26,11 +26,11 @@ builder.Services.AddAuthorization(options =>
 });
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireKitchen", policy => policy.RequireRole("Kitchen"));
+    options.AddPolicy("RequireStaff", policy => policy.RequireRole("Staff"));
 });
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireCashier", policy => policy.RequireRole("Cashier"));
+    options.AddPolicy("RequireCustomer", policy => policy.RequireRole("Customer"));
 });
 
 // Add configuration for weak password to make testing easier
@@ -91,7 +91,7 @@ app.Run();
 // search products
 // add edit delete customer for manager users?
 // top 10 customers
-// cart system (add edit delete)
+// cart (order) system (add edit delete)
 // checkout
 // contact page
 // deploy to app service??

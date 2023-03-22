@@ -16,12 +16,12 @@ namespace TakeawayOrder.Controllers
         {
             _context = context;
         }
-        [Authorize(Roles = "Kitchen,Admin")]
+        [Authorize(Roles = "Staff,Admin")]
         public IActionResult Index()
         {
             return View(_context.Products.ToList());
         }
-        [Authorize(Roles = "Kitchen,Admin")]
+        [Authorize(Roles = "Staff,Admin")]
         public IActionResult Create()
         {
             return View();
@@ -37,7 +37,7 @@ namespace TakeawayOrder.Controllers
             }
             return View(product);
         }
-        [Authorize(Roles = "Kitchen,Admin")]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> Edit(long id)
         {
             Product product = await _context.Products.FindAsync(id);

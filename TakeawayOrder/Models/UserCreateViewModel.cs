@@ -17,15 +17,6 @@ namespace TakeawayOrder.Models
         public string Email { get; set; }
         [DataType(DataType.Password), Required, MinLength(4, ErrorMessage = "Min length is 4")]
         public string Password { get; set; }
-        [Required]
-        [Display(Name = "Role")]
-        public Staffs StaffRole { get; set; }
-
     }
 
-    public enum Staffs
-    {
-        Cashier,
-        Kitchen
-    }
 }
