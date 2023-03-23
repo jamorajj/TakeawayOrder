@@ -1,16 +1,30 @@
-﻿@model User
+﻿@model RegisterViewModel
 
 @{
-    ViewData["Title"] = "Initialize Takeaway10 User";
+    ViewData["Title"] = "Customer Registration";
 }
+
+<div class="col-12 m-2">
+    @if (TempData["val"] != null)
+    {
+        <div class="bg-info text-white p-2">
+            @TempData["val"]
+        </div>
+    }
+</div>
 
 <div class="card" style="width: 20rem; margin: 0 auto;">
     <div class="card-body pb-0">
-        <h5 class="card-title text-center">Initialize Takeaway10 App User</h5>
+        <h5 class="card-title text-center">Customer Registration</h5>
     </div>
     <div class="card-body pt-0">
-        <form asp-area="Admin" asp-action="Initialize">
-            <div asp-validation-summary="All" class="text-danger"></div>
+        <form asp-action="Register">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
                 <input asp-for="UserName" class="form-control" />
@@ -27,7 +41,7 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group d-grid mt-2">
-                <input type="submit" value="Initialize" class="btn btn-primary" />
+                <input type="submit" value="Register" class="btn btn-primary" />
             </div>
         </form>
     </div>

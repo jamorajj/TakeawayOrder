@@ -28,7 +28,6 @@ namespace TakeawayOrder.Controllers
             OrderViewModel orderVM = new OrderViewModel();
 
             orderVM.OrderId = order.Id;
-            orderVM.OrderName = order.OrderName;
             orderVM.OrderStatus = order.status;
             orderVM.OrderProducts = new List<Product>();
 

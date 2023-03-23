@@ -16,6 +16,39 @@ namespace TakeawayOrder.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerVM)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser newUser = new ApplicationUser
+                {
+                    FullName = registerVM.FullName,
+                    UserName = registerVM.UserName,
+                    Email = registerVM.Email
+                };
+                IdentityResult result = await _userManager.CreateAsync(newUser, registerVM.Password);
+
+                // all user register are customer
+                result = await _userManager.AddToRoleAsync(newUser, "Customer");
+
+                if (result.Succeeded)
+                {
+                    return Redirect("/Account/Login");
+                }
+
+                foreach (IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View(registerVM);
+        }
         public IActionResult Login()
         {
             return View();
