@@ -64,7 +64,7 @@
                         @if ((await AuthorizationService.AuthorizeAsync(User, "RequireCustomer")).Succeeded)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="MyOrders">
                                     Manage Orders
                                     <span class="badge bg-primary ms-1">
                                         @await Component.InvokeAsync("OrderCount")

@@ -11,7 +11,6 @@
 
     public enum OrderStatus
     {
-        Placed,
         Ongoing,
         Pickup,
         Done

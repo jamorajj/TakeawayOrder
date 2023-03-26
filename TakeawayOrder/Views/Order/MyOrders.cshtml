@@ -1,0 +1,129 @@
+﻿@model MyOrdersViewModel
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="d-flex">
+    <div>
+        <h2>My Orders</h2>
+    </div>
+</div>
+
+@if (@TempData["flash"] != null)
+{
+    <div class="alert alert-info" role="alert">
+        @TempData["flash"]
+    </div>
+}
+
+@if (Model.Order == null)
+{
+    <div>
+        <h4>No Ongoing Order</h4>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-between mb-2">
+        <div>
+            <h4>Ongoing Order</h4>
+        </div>
+        <a asp-controller="Order" asp-action="Checkout" asp-route-id="@Model.Order.Id" class="btn btn-sm btn-primary">
+            Checkout
+        </a>
+    </div>
+    <table class="table table-bordered">
+        <tr class="bg-secondary text-center text-white">
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th></th>
+        </tr>
+
+        @if (Model.ProductOrders.Count == 0)
+        {
+            <tr>
+                <td colspan="4" class="text-center">No Products found</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var product in Model.ProductOrders)
+            {
+                <tr>
+                    <td>@product.ProductName</td>
+                    <td class="text-center">@product.ProductPrice</td>
+                    <td class="text-center">@product.ProductQuantity</td>
+                    <td>
+                        <div class="d-flex justify-content-center gap-1">
+                            <button class="btn btn-sm btn-primary" onclick="addOneProduct(@product.ProductId)">
+                                +1
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="deductOneProduct(@product.ProductId)">
+                                -1
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="removeToCart(@product.ProductId)">
+                                Remove
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+}
+
+<hr />
+
+@if (Model.MyOrders.Count == 0)
+{
+    <div>
+        <h4>No Orders</h4>
+    </div>
+}
+else
+{
+    <div>
+        <h4>Past Orders</h4>
+    </div>
+    <table class="table table-bordered">
+        <tr class="bg-secondary text-center text-white">
+            <th>Order Date</th>
+            <th>Order Status</th>
+            <th>Promo</th>
+            <th></th>
+        </tr>
+
+        @foreach (var order in Model.MyOrders)
+        {
+
+            <tr>
+                <td>@order.OrderDate</td>
+                <td class="text-center">@order.status</td>
+                <td class="text-center">@(order.IsPromo ? "Yes" : "No")</td>
+                <td class="text-center">
+                    @if (@order.status != OrderStatus.Ongoing)
+                    {
+                        <button class="btn btn-sm btn-primary">
+                            View
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<script>
+    function deductOneProduct(id) {
+        window.location.replace(`/Order/DeductOne?id=${id}`);
+    }
+
+    function addOneProduct(id) {
+        window.location.replace(`/Order/AddOne?id=${id}`);
+    }
+
+    function removeToCart(id) {
+        window.location.replace(`/Order/RemoveToCart?id=${id}`);
+    }
+</script>

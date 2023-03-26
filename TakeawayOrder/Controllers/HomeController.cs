@@ -40,10 +40,6 @@ namespace TakeawayOrder.Controllers
 
             return View(await products.ToListAsync());
         }
-        public IActionResult NewPage()
-        {
-            return View();
-        }
         public IActionResult About()
         {
             return View();
@@ -76,7 +72,7 @@ namespace TakeawayOrder.Controllers
                 newOrder.UserName = User.Identity.Name;
                 newOrder.IsPromo = false;
                 newOrder.OrderDate = DateTime.Now;
-                // add promo check here
+                // TODO: add promo check here
                 _context.Orders.Add(newOrder);
                 await _context.SaveChangesAsync();
 
@@ -113,6 +109,7 @@ namespace TakeawayOrder.Controllers
 
             return Redirect("/");
         }
+        // TODO: delete later
         public IActionResult NewOrder()
         {
             List<ProductOnOrderViewModel> productList = new List<ProductOnOrderViewModel>();
@@ -144,7 +141,7 @@ namespace TakeawayOrder.Controllers
                 var totalOrders = _context.Orders.ToList().Count();
 
                 var order = new Order();
-                order.status = OrderStatus.Placed;
+                order.status = OrderStatus.Pickup;
                 _context.Add(order);
                 await _context.SaveChangesAsync();
 
