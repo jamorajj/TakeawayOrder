@@ -33,9 +33,9 @@ namespace TakeawayOrder.Controllers
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return Redirect("/");
             }
-            return View(product);
+            return Redirect("/");
         }
         [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> Edit(long id)
@@ -51,9 +51,9 @@ namespace TakeawayOrder.Controllers
             {
                 _context.Update(product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return Redirect("/");
             }
-            return View(product);
+            return Redirect("/");
         }
         public async Task<IActionResult> Delete(long id)
         {
@@ -65,7 +65,7 @@ namespace TakeawayOrder.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return Redirect("/");
 
         }
     }

@@ -13,7 +13,7 @@
 
 <table class="table table-bordered">
     <tr class="bg-secondary text-center text-white">
-        <th>Order Name</th>
+        <th>Order By</th>
         <th>Status</th>
         <th></th>
     </tr>
@@ -30,7 +30,7 @@
         foreach (var order in Model)
         {
             <tr>
-                <td>@order.status</td>
+                <td>@order.UserName</td>
                 <td>@order.status</td>
                 <td class="text-center">
                     <a class="btn btn-sm btn-secondary" asp-action="Edit" asp-area="" asp-route-id="@order.Id">Update</a>
@@ -39,6 +39,3 @@
         }
     }
 </table>
-<a asp-action="Index" asp-controller="Home" class="mt-2">
-    Back to Orders
-</a>

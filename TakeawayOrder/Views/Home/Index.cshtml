@@ -4,21 +4,42 @@
 }
 
 <div class="d-flex justify-content-between">
-    <div>
-        <h2>Products</h2>
+    <div class="d-flex align-items-center">
+        <h2 class="me-2">Products</h2>
+        <form asp-controller="Home" asp-action="Index" method="get" class="d-flex align-items-center">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search" name="SearchString">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                @if (!@ViewBag.hasSearchString)
+                {
+                    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Clear</a>
+                }
+            </div>
+        </form>
     </div>
-    <form asp-controller="Home" asp-action="Index" method="get">
-        <p>
-            <input type="text" name="SearchString" />
-            <input type="submit" value="Filter" class="btn btn-sm btn-primary" />
-            @if (!@ViewBag.hasSearchString)
-            {
-                <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-secondary">
-                    Clear
-                </a>
-            }
-        </p>
-    </form>
+    @if (@ViewBag.Role == "Admin" || @ViewBag.Role == "Staff")
+    {
+        <div class="d-flex align-items-center">
+        <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Product" asp-action="Create">Add Product</a>
+        </div>
+    }
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteProductModalLabel">Delete Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+            </div>
+            <div id="modalFooter" class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @if (@TempData["flash"] != null)
@@ -59,8 +80,14 @@
                 <td class="text-center">@product.Price</td>
                 @if (@ViewBag.Role == "Admin" || @ViewBag.Role == "Staff")
                 {
-                    <td>edit btn</td>
-                    <td>delete btn</td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-secondary" asp-controller="Product" asp-action="Edit" asp-area="" asp-route-id="@product.Id">Edit</a>
+                    </td>
+                    <td class="text-center">
+                        <button data-pid="@product.Id" data-pname="@product.Name" type="button" class="deleteProductBtn btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+                            Delete
+                        </button>
+                    </td>
                 }
                 else
                 {
@@ -98,4 +125,18 @@
         console.log(id, quantity);
         window.location.replace(`/Home/AddToOrder?id=${id}&quantity=${quantity}`);
     }
+
+    const deleteProductBtns = document.querySelectorAll(".deleteProductBtn");
+    const modalBody = document.getElementById("modalBody");
+    const modalFooter = document.getElementById("modalFooter");
+    const deleteBtn = document.createElement("a");
+    deleteBtn.classList = "btn btn-danger";
+    deleteBtn.innerHTML = "Delete";
+
+    modalFooter.appendChild(deleteBtn);
+
+    deleteProductBtns.forEach(el => el.addEventListener('click', e => {
+        deleteBtn.href = `/Product/Delete/${e.target.getAttribute("data-pid")}`;
+        modalBody.innerHTML = `Delete product ${e.target.getAttribute("data-pname")}?`
+    }));
 </script>
