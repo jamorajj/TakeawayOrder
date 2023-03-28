@@ -58,6 +58,39 @@ namespace TakeawayOrder.Controllers
 
             return View(myOrdersVM);
         }
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> ViewMyOrder(long id)
+        {
+            Order order = await _context.Orders.FindAsync(id);
+            var productOrders = await _context.ProductOrder.Where(x => x.OrderId == id).ToListAsync();
+            OrderViewModel orderVM = new OrderViewModel();
+
+            orderVM.OrderId = order.Id;
+            orderVM.OrderDate = order.OrderDate;
+            orderVM.IsPromo = order.IsPromo;
+            orderVM.OrderTotal = 0;
+            orderVM.OrderStatus = order.status;
+            orderVM.OrderProducts = new List<ProductWithQuantityViewModel>();
+
+            foreach (var productInOrder in productOrders)
+            {
+                Product p = await _context.Products.FindAsync(productInOrder.ProductId);
+
+                ProductWithQuantityViewModel pq = new ProductWithQuantityViewModel();
+
+                pq.ProductId = productInOrder.ProductId;
+                pq.ProductPrice = p.Price;
+                pq.ProductName = p.Name;
+                pq.ProductQuantity = productInOrder.Quantity;
+                pq.ProductTotal = productInOrder.Quantity * p.Price;
+
+                orderVM.OrderTotal = orderVM.OrderTotal + (productInOrder.Quantity * p.Price);
+
+                orderVM.OrderProducts.Add(pq);
+            }
+
+            return View(orderVM);
+        }
         [Authorize(Roles = "Staff,Customer,Admin")]
         public async Task<IActionResult> DeductOne(string id)
         {
@@ -153,7 +186,6 @@ namespace TakeawayOrder.Controllers
 
             return Redirect("/Order/MyOrders");
         }
-        // TODO: delete this?
         [Authorize(Roles = "Staff,Admin")]
         public async Task<IActionResult> Edit(long id)
         {
@@ -163,13 +195,23 @@ namespace TakeawayOrder.Controllers
 
             orderVM.OrderId = order.Id;
             orderVM.OrderStatus = order.status;
-            orderVM.OrderProducts = new List<Product>();
+            orderVM.OrderProducts = new List<ProductWithQuantityViewModel>();
 
             foreach (var productInOrder in productOrders)
             {
                 Product p = await _context.Products.FindAsync(productInOrder.ProductId);
 
-                orderVM.OrderProducts.Add(p);
+                ProductWithQuantityViewModel pq = new ProductWithQuantityViewModel();
+
+                pq.ProductId = productInOrder.ProductId;
+                pq.ProductPrice = p.Price;
+                pq.ProductName = p.Name;
+                pq.ProductQuantity = productInOrder.Quantity;
+                pq.ProductTotal = productInOrder.Quantity * p.Price;
+
+                orderVM.OrderTotal = orderVM.OrderTotal + (productInOrder.Quantity * p.Price);
+
+                orderVM.OrderProducts.Add(pq);
             }
 
             return View(orderVM);

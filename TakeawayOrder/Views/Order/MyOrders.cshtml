@@ -104,9 +104,9 @@ else
                 <td class="text-center">
                     @if (@order.status != OrderStatus.Ongoing)
                     {
-                        <button class="btn btn-sm btn-primary">
+                        <a asp-controller="Order" asp-action="ViewMyOrder" asp-route-id="@order.Id" class="btn btn-sm btn-primary">
                             View
-                        </button>
+                        </a>
                     }
                 </td>
             </tr>

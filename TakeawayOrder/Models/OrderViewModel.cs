@@ -5,8 +5,11 @@ namespace TakeawayOrder.Models
     public class OrderViewModel
     {
         public long OrderId { get; set; }
+        public DateTime OrderDate { get; set; }
         public string OrderName { get; set; }
-        public List<Product> OrderProducts { get; set; }
+        public decimal OrderTotal { get; set; }
+        public bool IsPromo { get; set; }
+        public List<ProductWithQuantityViewModel> OrderProducts { get; set; }
         [Display(Name = "Order Status")]
         public OrderStatus OrderStatus { get; set; }
     }

@@ -15,4 +15,9 @@
         Pickup,
         Done
     }
+    public enum OrderStatusStaff
+    {
+        Pickup,
+        Done
+    }
 }
