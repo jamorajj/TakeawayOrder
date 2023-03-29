@@ -1,0 +1,48 @@
+﻿@model Promo
+
+@{
+    ViewData["Title"] = "Manage Promo";
+}
+
+@if (@ViewBag.hasPromo)
+{
+    <div class="alert alert-info" role="alert">
+        A promo is active until @ViewBag.endDate
+    </div>
+}
+
+<div class="card" style="width: 20rem; margin: 0 auto;">
+    <div class="card-body pb-0">
+        <h5 class="card-title text-center">Manage Takeaway10 Promo</h5>
+        @if (@ViewBag.hasPromo)
+        {
+            <p class="text-center">Current promo in progress.</p>
+        } else
+        {
+            <p class="text-center">Select an End Date</p>
+        }
+    </div>
+    <div class="card-body pt-0">
+        @if (@ViewBag.hasPromo)
+        {
+            <form asp-controller="Promo" asp-action="Index">
+                <div class="form-group d-grid mt-2">
+                    <a class="btn btn-primary" asp-area="" asp-controller="Promo" asp-action="Deactivate">Deactivate</a>
+                </div>
+            </form>
+        }
+        else
+        {
+            <form asp-controller="Promo" asp-action="Index">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input asp-for="EndDate" class="form-control" type="date" />
+                </div>
+                <div class="form-group d-grid mt-2">
+                    <input type="submit" value="Activate" class="btn btn-primary" />
+                </div>
+            </form>
+        }
+        
+    </div>
+</div>

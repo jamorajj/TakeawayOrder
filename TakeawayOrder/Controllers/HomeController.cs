@@ -37,6 +37,16 @@ namespace TakeawayOrder.Controllers
 
             ViewBag.hasSearchString = String.IsNullOrEmpty(searchString);
 
+            // check if active promo....
+            Promo p = _context.Promos.Where(x => x.EndDate > DateTime.Today).FirstOrDefault();
+
+            // viewbag if promo is still active...
+            ViewBag.hasPromo = false;
+            if (p != null)
+            {
+                ViewBag.hasPromo = true;
+                ViewBag.endDate = p.EndDate;
+            }
 
             return View(await products.ToListAsync());
         }

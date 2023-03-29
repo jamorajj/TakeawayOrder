@@ -24,13 +24,22 @@
 }
 else
 {
-    <div class="d-flex justify-content-between mb-2">
+    <div class="d-flex justify-content-between align-content-center mb-2">
         <div>
             <h4>Ongoing Order</h4>
         </div>
-        <a asp-controller="Order" asp-action="Checkout" asp-route-id="@Model.Order.Id" class="btn btn-sm btn-primary">
-            Checkout
-        </a>
+        <div>
+            @if (@ViewBag.hasPromo)
+            {
+                <span class="me-2">Total: <del>@Model.OrderTotal</del>&nbsp;<span class="fw-bold">@Model.OrderTotalDiscounted</span></span>
+            } else
+            {
+                <span class="me-2">Total: <span class="fw-bold">@Model.OrderTotal</span></span>
+            }
+            <a asp-controller="Order" asp-action="Checkout" asp-route-id="@Model.Order.Id" class="btn btn-sm btn-primary">
+                Checkout
+            </a>
+        </div>
     </div>
     <table class="table table-bordered">
         <tr class="bg-secondary text-center text-white">

@@ -20,7 +20,8 @@
     @if (@ViewBag.Role == "Admin" || @ViewBag.Role == "Staff")
     {
         <div class="d-flex align-items-center">
-        <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Product" asp-action="Create">Add Product</a>
+            <a class="btn btn-primary btn-sm me-2" asp-area="" asp-controller="Product" asp-action="Create">Add Product</a>
+            <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Promo" asp-action="Index">Promo</a>
         </div>
     }
 </div>
@@ -42,6 +43,17 @@
     </div>
 </div>
 
+@if (@ViewBag.hasPromo)
+{
+    <div class="alert alert-info" role="alert">
+        <p class="mb-0">
+            <span class="fw-bold">Takeaway 10% promo is active until @ViewBag.endDate. Order while it's hot!</span>
+            <br />
+            <span class="fst-italic">10% will apply on checkout.</span>
+        </p>
+    </div>
+}
+
 @if (@TempData["flash"] != null)
 {
     <div class="alert alert-info" role="alert">
@@ -57,7 +69,8 @@
         {
             <th></th>
             <th></th>
-        } else
+        }
+        else
         {
             <th>Quantity</th>
             <th></th>
@@ -113,7 +126,7 @@
                         </button>
                     </td>
                 }
-                
+
             </tr>
         }
     }

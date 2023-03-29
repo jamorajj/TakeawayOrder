@@ -16,6 +16,7 @@
         <th>Order By</th>
         <th>Order Date</th>
         <th>Status</th>
+        <th>Promo</th>
         <th></th>
     </tr>
 
@@ -34,6 +35,7 @@
                 <td>@order.UserName</td>
                 <td class="text-center">@order.OrderDate</td>
                 <td class="text-center">@order.status</td>
+                <td class="text-center">@order.IsPromo</td>
                 <td class="text-center">
                     <a class="btn btn-sm btn-secondary" asp-action="Edit" asp-area="" asp-route-id="@order.Id">Update</a>
                 </td>

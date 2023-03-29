@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System.Data;
 using TakeawayOrder.Data;
 using TakeawayOrder.Models;
@@ -31,7 +32,7 @@ namespace TakeawayOrder.Controllers
             // get an ongoing order, if there is any
             var order = _context.Orders.FirstOrDefault(x => x.UserName == User.Identity.Name && x.status == OrderStatus.Ongoing);
             // get all the orders of the current user
-            var myOrders = _context.Orders.Where(x => x.UserName == User.Identity.Name).ToList();
+            var myOrders = _context.Orders.Where(x => x.UserName == User.Identity.Name && x.status != OrderStatus.Ongoing).ToList();
             // if there is an ongoing order...
             if (order != null)
             {
@@ -49,8 +50,20 @@ namespace TakeawayOrder.Controllers
                     prodOrderVM.ProductPrice = p.Price;
                     prodOrderVM.ProductQuantity = prodOrder.Quantity;
 
+                    myOrdersVM.OrderTotal += p.Price * prodOrder.Quantity;
+
                     myOrdersVM.ProductOrders.Add(prodOrderVM);
                 }
+            }
+
+            Promo promo = _context.Promos.Where(x => x.EndDate > DateTime.Today).FirstOrDefault();
+
+            ViewBag.hasPromo = false;
+            if (promo != null)
+            {
+                ViewBag.hasPromo = true;
+                decimal discount = myOrdersVM.OrderTotal * (decimal)0.1;
+                myOrdersVM.OrderTotalDiscounted = myOrdersVM.OrderTotal - discount;
             }
 
             myOrdersVM.Order = order;
@@ -89,6 +102,12 @@ namespace TakeawayOrder.Controllers
                 orderVM.OrderProducts.Add(pq);
             }
 
+            if (orderVM.IsPromo)
+            {
+                decimal discount = orderVM.OrderTotal * (decimal)0.1;
+                orderVM.DiscountedOrderTotal = orderVM.OrderTotal - discount;
+            }
+
             return View(orderVM);
         }
         [Authorize(Roles = "Staff,Customer,Admin")]
@@ -119,6 +138,14 @@ namespace TakeawayOrder.Controllers
             }
             
             await _context.SaveChangesAsync();
+
+            // if no more products under an ongoing order, delete it...
+            var forCheck = _context.ProductOrder.FirstOrDefault(x => x.OrderId == order.Id);
+            if(forCheck == null)
+            {
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
 
             return Redirect("/Order/MyOrders");
         }
@@ -165,6 +192,14 @@ namespace TakeawayOrder.Controllers
             _context.ProductOrder.Remove(prodOrder);
             await _context.SaveChangesAsync();
 
+            // if no more products under an ongoing order, delete it...
+            var forCheck = _context.ProductOrder.FirstOrDefault(x => x.OrderId == order.Id);
+            if (forCheck == null)
+            {
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
+
             return Redirect("/Order/MyOrders");
         }
         [Authorize(Roles = "Customer")]
@@ -175,6 +210,13 @@ namespace TakeawayOrder.Controllers
             // try to get an ongoing order...
             var order = _context.Orders.FirstOrDefault(x => x.UserName == User.Identity.Name && x.status == OrderStatus.Ongoing && x.Id == id);
             order.status = OrderStatus.Pickup;
+
+            Promo promo = _context.Promos.Where(x => x.EndDate > DateTime.Today).FirstOrDefault();
+
+            if (promo != null)
+            {
+                order.IsPromo = true;
+            }
 
             _context.Orders.Update(order);
 
@@ -194,6 +236,7 @@ namespace TakeawayOrder.Controllers
             OrderViewModel orderVM = new OrderViewModel();
 
             orderVM.OrderId = order.Id;
+            orderVM.IsPromo = order.IsPromo;
             orderVM.OrderStatus = order.status;
             orderVM.OrderProducts = new List<ProductWithQuantityViewModel>();
 
@@ -212,6 +255,12 @@ namespace TakeawayOrder.Controllers
                 orderVM.OrderTotal = orderVM.OrderTotal + (productInOrder.Quantity * p.Price);
 
                 orderVM.OrderProducts.Add(pq);
+            }
+
+            if (orderVM.IsPromo)
+            {
+                decimal discount = orderVM.OrderTotal * (decimal)0.1;
+                orderVM.DiscountedOrderTotal = orderVM.OrderTotal - discount;
             }
 
             return View(orderVM);

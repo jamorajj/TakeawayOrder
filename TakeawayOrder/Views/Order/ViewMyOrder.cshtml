@@ -36,7 +36,14 @@
             </table>
         </div>
         <div class="form-group d-flex justify-content-end fw-bold">
-            Total: @Model.OrderTotal
+            @if (@Model.IsPromo)
+            {
+                <span class="me-2">Total: <del>@Model.OrderTotal</del>&nbsp;<span class="fw-bold">@Model.DiscountedOrderTotal</span></span>
+            }
+            else
+            {
+                <span class="me-2">Total: <span class="fw-bold">@Model.OrderTotal</span></span>
+            }
         </div>
 
         <div class="form-group d-grid mt-2">
