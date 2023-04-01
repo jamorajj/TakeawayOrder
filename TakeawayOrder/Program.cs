@@ -93,6 +93,5 @@ app.MapRazorPages();
 
 app.Run();
 
-// top 10 customers
 // contact page
 // deploy to app service??

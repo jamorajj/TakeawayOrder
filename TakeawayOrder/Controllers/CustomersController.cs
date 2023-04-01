@@ -16,11 +16,18 @@ namespace TakeawayOrder.Controllers
             _roleManager = roleManager;
         }
         [Authorize(Roles = "Staff,Admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string orderBy = "")
         {
             // if app has users, list all users and roles for admin to see
             List<UserWithRoleViewModel> usersWithRoles = new List<UserWithRoleViewModel>();
-            var users = _userManager.Users.ToList();
+            var users = _userManager.Users.OrderBy(u => u.FullName).ToList();
+            ViewBag.heading = "List of Customers";
+
+            if (orderBy == "top10")
+            {
+                users = _userManager.Users.OrderByDescending(u => u.CheckoutCount).ToList();
+                ViewBag.heading = "List of Top Customers";
+            }
 
             // users view model to get roles per user
             foreach (var user in users)
