@@ -75,6 +75,11 @@ namespace TakeawayOrder.Controllers
         public async Task<IActionResult> ViewMyOrder(long id)
         {
             Order order = await _context.Orders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
             var productOrders = await _context.ProductOrder.Where(x => x.OrderId == id).ToListAsync();
             OrderViewModel orderVM = new OrderViewModel();
 
@@ -232,6 +237,11 @@ namespace TakeawayOrder.Controllers
         public async Task<IActionResult> Edit(long id)
         {
             Order order = await _context.Orders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
             var productOrders = await _context.ProductOrder.Where(x => x.OrderId == id).ToListAsync();
             OrderViewModel orderVM = new OrderViewModel();
 

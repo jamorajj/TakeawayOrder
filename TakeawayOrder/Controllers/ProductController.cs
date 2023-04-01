@@ -17,11 +17,6 @@ namespace TakeawayOrder.Controllers
             _context = context;
         }
         [Authorize(Roles = "Staff,Admin")]
-        public IActionResult Index()
-        {
-            return View(_context.Products.ToList());
-        }
-        [Authorize(Roles = "Staff,Admin")]
         public IActionResult Create()
         {
             return View();
@@ -42,6 +37,11 @@ namespace TakeawayOrder.Controllers
         {
             Product product = await _context.Products.FindAsync(id);
 
+            if (product == null)
+            {
+                return NotFound();
+            }
+
             return View(product);
         }
         [HttpPost]
@@ -58,6 +58,11 @@ namespace TakeawayOrder.Controllers
         public async Task<IActionResult> Delete(long id)
         {
             Product product = await _context.Products.FindAsync(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
 
             if (product != null)
             {

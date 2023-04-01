@@ -72,6 +72,8 @@ SeedData.SeedDatabase(context);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
 app.UseRouting();
 
 app.UseAuthentication();
@@ -91,11 +93,6 @@ app.MapRazorPages();
 
 app.Run();
 
-// product promotion
-// search products
-// add edit delete customer for manager users?
 // top 10 customers
-// cart (order) system (add edit delete)
-// checkout
 // contact page
 // deploy to app service??

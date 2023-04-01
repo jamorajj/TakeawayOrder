@@ -84,6 +84,11 @@ namespace TakeawayOrder.Controllers
         {
             ApplicationUser user = await _userManager.FindByIdAsync(id);
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+
             UserEditViewModel userEdit = new(user);
 
             return View(userEdit);
@@ -124,6 +129,11 @@ namespace TakeawayOrder.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             ApplicationUser user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
 
             if (user != null)
             {
