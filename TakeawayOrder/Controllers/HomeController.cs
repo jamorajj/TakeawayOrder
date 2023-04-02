@@ -58,7 +58,7 @@ namespace TakeawayOrder.Controllers
 
             return View(await products.ToListAsync());
         }
-        public IActionResult About()
+        public IActionResult Contact()
         {
             return View();
         }

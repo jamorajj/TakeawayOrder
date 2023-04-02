@@ -93,5 +93,4 @@ app.MapRazorPages();
 
 app.Run();
 
-// contact page
 // deploy to app service??
