@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/takeawayorderdbserver/databases/TakeawayOrder_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DbConnection",
+      "dynamicId": null
+    }
+  }
+}

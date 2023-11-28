@@ -64,7 +64,7 @@ namespace TakeawayOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Redirect("/Promo");
+            return Redirect("/");
         }
     }
 }

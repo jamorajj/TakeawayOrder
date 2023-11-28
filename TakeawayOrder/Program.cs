@@ -94,3 +94,4 @@ app.MapRazorPages();
 app.Run();
 
 // deploy to app service??
+//https://learn.microsoft.com/en-us/aspnet/core/tutorials/publish-to-iis?view=aspnetcore-7.0&tabs=visual-studio
